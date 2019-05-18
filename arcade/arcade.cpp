@@ -1,7 +1,7 @@
-
 #include "arcade.hpp"
-#include "color.hpp"
-#include "screenbuffer.hpp"
+#include "graphics/color.hpp"
+#include "graphics/screenbuffer.hpp"
+#include "graphics/screen.hpp"
 
 using namespace std;
 
@@ -14,16 +14,9 @@ int main(int argc, const char* argv[]){
         return 1;
     }
     
-    SDL_Surface* ptrSurface = 
-    SDL_PixelFormat* pixelFormat = ptrSurface->format;
-    Color::initPixelFormat(pixelFormat);
-
-    ScreenBuffer buffer;
-    buffer.init(pixelFormat->format, ptrSurface->w, ptrSurface->h);
-    buffer.setPixel(Color::Green(), WIN_HEIGHT/2, WIN_WIDTH/2);
-
-    SDL_BlitSurface(buffer.getSurface(), nullptr, ptrSurface, nullptr);
-    SDL_UpdateWindowSurface(ptrWin);
+    Screen screen("Arcade", WIN_WIDTH, WIN_HEIGHT, 4);
+    screen.draw(WIN_WIDTH/2, WIN_HEIGHT/2, Color::Green());
+    screen.swapBuffers();
 
     SDL_Event sdlEvent;
     bool running = true;
@@ -36,8 +29,7 @@ int main(int argc, const char* argv[]){
             }
         }
     }
-    SDL_DestroyWindow(ptrWin);
+    screen.clean_up();
     SDL_Quit();
-
     return 0;
 }

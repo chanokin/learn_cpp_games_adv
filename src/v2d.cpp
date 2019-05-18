@@ -37,7 +37,7 @@ Vec2D& Vec2D::normalize(){
 
 Vec2D Vec2D::getUnitVec() const{
     float n = norm();
-    if(fabs(n) > epsilon){
+    if(fabs(n) > EPSILON){
         return (*this) / n;
     }
     return Vec2D::ZERO;
@@ -47,7 +47,7 @@ float Vec2D::distance(const Vec2D& v2d) const{
     return (v2d - (*this)).norm();
 }
 
-float Vec2D::project(const Vec2D& v2d) const{
+Vec2D Vec2D::project(const Vec2D& v2d) const{
     // use floats to reduce memory footprint
     float m2 = v2d.norm2();
     if(m2 > EPSILON){
@@ -73,7 +73,7 @@ Vec2D Vec2D::reflect(const Vec2D& normal) const{
     //v2d <- normal (n) to a "surface"
     //this <- point or vector to reflect on the surface
     //v - 2(v.n)n
-    return (*this) - (2 * project(v2d));
+    return (*this) - (2 * project(normal));
 }
 
 void Vec2D::rotate(const float angle, const Vec2D around_v){
@@ -84,8 +84,8 @@ void Vec2D::rotate(const float angle, const Vec2D around_v){
     float sa = sinf(angle);
     Vec2D me(_x, _y);
     me -= around_v; //move coordinates to around_v to do rotation
-    xr = me._x * ca - me._y * sa;
-    yr = me._x * sa + me._y * ca;
+    float xr = me._x * ca - me._y * sa;
+    float yr = me._x * sa + me._y * ca;
     _x = xr + around_v._x;
     _y = yr + around_v._y;
 }
@@ -99,8 +99,8 @@ Vec2D Vec2D::rotateSafe(const float angle, const Vec2D around_v) const{
     float sa = sinf(angle);
     Vec2D me(_x, _y);
     me -= around_v; //move coordinates to around_v to do rotation
-    xr = me._x * ca - me._y * sa;
-    yr = me._x * sa + me._y * ca;
+    float xr = me._x * ca - me._y * sa;
+    float yr = me._x * sa + me._y * ca;
     return Vec2D(xr + around_v._x, yr + around_v._y);
 }
 
@@ -142,12 +142,12 @@ Vec2D Vec2D::operator/(float m) const{
     return Vec2D(d * _x, d * _y);
 }
 
-Vec2D& operator*=(float m){
+Vec2D& Vec2D::operator*=(float m){
     (*this) = (*this) * m;
     return (*this);
 }
 
-Vec2D& operator/=(float m){
+Vec2D& Vec2D::operator/=(float m){
     (*this) = (*this) / m;
     return (*this);
 }
@@ -161,12 +161,12 @@ Vec2D Vec2D::operator-(const Vec2D& v2d) const{
     return (*this) + (-v2d);
 }
 
-Vec2D& operator+=(const Vec2D& v2d){
+Vec2D& Vec2D::operator+=(const Vec2D& v2d){
     (*this) = (*this) + v2d;
     return (*this);
 }
 
-Vec2D& operator-=(const Vec2D& v2d){
+Vec2D& Vec2D::operator-=(const Vec2D& v2d){
     (*this) = (*this) - v2d;
     return (*this);
 }

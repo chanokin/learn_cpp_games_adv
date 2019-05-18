@@ -4,8 +4,8 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
-const size_t WIN_HEIGHT = 288;
-const size_t WIN_WIDTH = 224;
+const size_t WIN_HEIGHT = 144;
+const size_t WIN_WIDTH = 112;
 
 inline size_t to_index(SDL_Surface* srf, size_t row, size_t col){
     return row * srf->w + col;
