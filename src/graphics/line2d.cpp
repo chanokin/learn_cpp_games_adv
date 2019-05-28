@@ -60,3 +60,8 @@ Vec2D Line2D::middle() const{
     return Vec2D(half_x, half_y);
 
 }
+
+void Line2D::rotateAround(const float& angle, const Vec2D& p){
+    _start.rotate(angle, p);
+    _end.rotate(angle, p);
+}

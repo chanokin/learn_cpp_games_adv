@@ -52,7 +52,7 @@ void Screen::clear(){
 }
 
 void Screen::draw(int x, int y, const Color& c){
-    if(_ptrWin != nullptr){
+    if(_ptrWin != nullptr && inbound(x, y)){
         setPixel(c, y, x);
     }
 }
@@ -101,5 +101,10 @@ void Screen::draw(const Line2D& l, const Color& c){
     }
 }
 
-
+void Screen::draw(const Star2D& s, const Color& c){
+    for(int i = 0; i < s.numLines(); i++){
+        Line2D l = s.line(i);
+        draw(l, c);
+    }
+}
 

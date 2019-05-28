@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include "v2d.hpp"
 #include "line2d.hpp"
+#include "star2d.hpp"
 
 
 class Screen{
@@ -20,7 +21,9 @@ class Screen{
         void clean_up();
         inline size_t width() const{return _w;}
         inline size_t height() const{return _h;}
-
+        inline bool inbound(const float& x, const float& y) const{
+            return (x>= 0 && x < _w && y >= 0 && y < _h);
+        }
         inline SDL_PixelFormat* pixelformat() const{return _ptrPixFormat;}
         inline void update(){
             SDL_BlitScaled(_buffer.getSurface(), nullptr, _ptrSurf, nullptr);
@@ -35,7 +38,7 @@ class Screen{
         void draw(int x, int y, const Color& c);
         void draw(const Vec2D& p, const Color& c);
         void draw(const Line2D& l, const Color& c);
-
+        void draw(const Star2D& s, const Color& c);
     private:
         size_t _w, _h;
         Color _clearColor;

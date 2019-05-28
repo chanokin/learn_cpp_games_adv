@@ -34,6 +34,7 @@ class Line2D{
         float slope() const;
         float length() const;
         Vec2D middle() const;
+        void rotateAround(const float& angle, const Vec2D& p);
 
     private:
         Vec2D _start, _end;
