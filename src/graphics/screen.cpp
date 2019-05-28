@@ -1,6 +1,7 @@
 #include "screen.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <math.h>
 
 
 using namespace std;
@@ -44,6 +45,12 @@ void Screen::swapBuffers(){
     }
 }
 
+void Screen::clear(){
+    if(_ptrWin != nullptr){
+        SDL_FillRect(_ptrSurf, nullptr, _clearColor.toPixel());
+    }
+}
+
 void Screen::draw(int x, int y, const Color& c){
     if(_ptrWin != nullptr){
         setPixel(c, y, x);
@@ -56,8 +63,43 @@ void Screen::draw(const Vec2D& p, const Color& c){
     }
 }
 
-void Screen::clear(){
+void Screen::draw(const Line2D& l, const Color& c){
     if(_ptrWin != nullptr){
-        SDL_FillRect(_ptrSurf, nullptr, _clearColor.toPixel());
+        //integer mid-point line algorithm
+        int x0 = roundf(l.start().x()), y0 = roundf(l.start().y());
+        int x1 = roundf(l.end().x()), y1 = roundf(l.end().y());
+        int dx = x1 - x0, dy = y1 - y0;
+        signed const char incx = ((dx > 0) - (dx < 0));
+        signed const char incy = ((dy > 0) - (dy < 0));
+        int decision = 0;
+
+        dx = abs(dx) * 2; dy = abs(dy) * 2;
+        draw(x0, y0, c);
+        if(dx >= dy){
+            decision = dy - dx/2;
+            while(x0 != x1){
+                if(decision >= 0){
+                    decision -= dx;
+                    y0 += incy;
+                }
+                decision += dy;
+                x0 += incx;
+                draw(x0, y0, c);
+            }
+        }else{
+            decision = dx - dy/2;
+            while(y0 != y1){
+                if(decision >= 0){
+                    decision -= dy;
+                    x0 += incx;
+                }
+                decision += dx;
+                y0 += incy;
+                draw(x0, y0, c);
+            }
+        }
     }
 }
+
+
+

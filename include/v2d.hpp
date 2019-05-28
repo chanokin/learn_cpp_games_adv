@@ -8,7 +8,7 @@ using namespace std;
 class Vec2D{
     public:
     Vec2D(void):_x(0.0f), _y(0.0f){}
-    Vec2D(float x, float y):_x(x), _y(y){}
+    Vec2D(const float& x, const float& y):_x(x), _y(y){}
     inline float x() const{return _x;}
     inline float y() const{return _y;}
     inline void setX(float x){_x = x;}

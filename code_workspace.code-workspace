@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "arcade"
+		},
+		{
+			"path": "include"
+		},
+		{
+			"path": "include/graphics"
+		}
+
+	]
+}

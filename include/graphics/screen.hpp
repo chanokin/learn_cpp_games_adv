@@ -7,6 +7,7 @@
 #include "color.hpp"
 #include <SDL2/SDL.h>
 #include "v2d.hpp"
+#include "line2d.hpp"
 
 
 class Screen{
@@ -33,6 +34,7 @@ class Screen{
         void swapBuffers();
         void draw(int x, int y, const Color& c);
         void draw(const Vec2D& p, const Color& c);
+        void draw(const Line2D& l, const Color& c);
 
     private:
         size_t _w, _h;
