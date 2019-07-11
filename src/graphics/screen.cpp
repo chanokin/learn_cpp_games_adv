@@ -108,3 +108,15 @@ void Screen::draw(const Star2D& s, const Color& c){
     }
 }
 
+void Screen::draw(const Triangle& s, const Color& c){
+
+}
+
+void Screen::draw(const AxisRect& s, const Color& c){
+
+}
+
+void Screen::draw(const Circle& s, const Color& c){
+
+}
+

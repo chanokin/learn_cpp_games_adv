@@ -9,6 +9,9 @@
 #include "v2d.hpp"
 #include "line2d.hpp"
 #include "star2d.hpp"
+#include "triangle.hpp"
+#include "axis_rect.hpp"
+#include "circle.hpp"
 
 
 class Screen{
@@ -39,6 +42,9 @@ class Screen{
         void draw(const Vec2D& p, const Color& c);
         void draw(const Line2D& l, const Color& c);
         void draw(const Star2D& s, const Color& c);
+        void draw(const Triangle& s, const Color& c);
+        void draw(const AxisRect& s, const Color& c);
+        void draw(const Circle& s, const Color& c);
     private:
         size_t _w, _h;
         Color _clearColor;
