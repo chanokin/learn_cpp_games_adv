@@ -3,6 +3,7 @@
 #include "graphics/screenbuffer.hpp"
 #include "graphics/screen.hpp"
 #include "graphics/line2d.hpp"
+#include "graphics/triangle.hpp"
 
 using namespace std;
 
@@ -16,6 +17,11 @@ int main(int argc, const char* argv[]){
     }
     
     Screen screen("Arcade", WIN_WIDTH, WIN_HEIGHT, 4);
+
+    Triangle t = Triangle(Vec2D(20.0f, 10.0f),
+                    Vec2D(20.0f, 20.0f),Vec2D(50.0f, 20.0f));
+
+    screen.draw(t, Color::Green());
     screen.draw(WIN_WIDTH/2, WIN_HEIGHT/2, Color::Green());
     Line2D line0 = Line2D(10.0f, 40.0f, 23.0f, 90.0f);
     screen.draw(line0, Color::Red());

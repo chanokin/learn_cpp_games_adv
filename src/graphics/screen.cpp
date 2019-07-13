@@ -2,6 +2,10 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <math.h>
+#include "triangle.hpp"
+#include "circle.hpp"
+#include "axis_rect.hpp"
+
 
 
 using namespace std;
@@ -109,7 +113,9 @@ void Screen::draw(const Star2D& s, const Color& c){
 }
 
 void Screen::draw(const Triangle& s, const Color& c){
-
+    draw(Line2D(s.p0(), s.p1()), c);
+    draw(Line2D(s.p1(), s.p2()), c);
+    draw(Line2D(s.p2(), s.p0()), c);
 }
 
 void Screen::draw(const AxisRect& s, const Color& c){

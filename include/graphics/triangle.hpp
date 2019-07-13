@@ -14,11 +14,11 @@ class Triangle : public Shape{
         inline Vec2D p1() const {return _points[1];}
         inline Vec2D p2() const {return _points[2];}
 
-        virtual Vec2D getCenter() const override;
+        virtual Vec2D center() const override;
         float area() const;
         bool contains(const Vec2D& p) const;
     private:
-        float area(const Vec2D& p0, const Vec2D& p1, const Vec2D& p2);
-}
+        float area3(const Vec2D& p0, const Vec2D& p1, const Vec2D& p2) const;
+};
 
 #endif

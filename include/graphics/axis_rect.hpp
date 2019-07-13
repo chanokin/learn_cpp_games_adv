@@ -1,5 +1,7 @@
 #ifndef SHAPE_AXIS_RECT_HPP
 #define SHAPE_AXIS_RECT_HPP
+#include "shape.hpp"
+#include "v2d.hpp"
 
 using namespace std;
 
@@ -17,11 +19,11 @@ class AxisRect : public Shape{
         float width()const;
         float height()const;
         void moveTo(const Vec2D& position);
-        virtual Vec2D getCenter() const override;
+        virtual Vec2D center() const override;
         bool intersects(const AxisRect& rhs);
         bool contains(const Vec2D& p);
         static AxisRect inset(const AxisRect rect, Vec2D& insets);
-        virtual vector<Vec2D> getPoints() const override;
-}
+        virtual vector<Vec2D> points() const override;
+};
 
 #endif

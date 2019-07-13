@@ -3,7 +3,7 @@
 #include <iostream>
 
 ScreenBuffer::ScreenBuffer(const ScreenBuffer* b){
-    init(_surface->format->format, _surface->w, _surface->h, false);
+    init(b->_surface->format->format, b->_surface->w, b->_surface->h, false);
     SDL_BlitSurface(b->_surface, nullptr, _surface, nullptr);
 }
 

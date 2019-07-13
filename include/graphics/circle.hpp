@@ -1,5 +1,7 @@
 #ifndef SHAPE_CIRCLE_HPP
 #define SHAPE_CIRCLE_HPP
+#include "shape.hpp"
+#include "v2d.hpp"
 
 class Circle: public Shape{
     public:
@@ -10,10 +12,10 @@ class Circle: public Shape{
         inline void setRadius(const float& r) {_radius = r;}
         inline void moveTo(const Vec2D pos){_points[0] = pos;}
 
-        bool intersects(const Circle& c);
-        bool contains(const Vec2D& p);
+        bool intersects(const Circle& c) const;
+        bool contains(const Vec2D& p) const;
     private:
         float _radius;
-}
+};
 
 #endif

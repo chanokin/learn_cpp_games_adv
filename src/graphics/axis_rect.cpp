@@ -1,6 +1,6 @@
 #include "axis_rect.hpp"
-#define TL 0;
-#define BR 1;
+#define TL 0
+#define BR 1
 
 AxisRect::AxisRect(): AxisRect(Vec2D::ZERO, Vec2D::ZERO){
 }
@@ -33,7 +33,7 @@ void AxisRect::moveTo(const Vec2D& position){
     _points[BR] = Vec2D(position.x() + w - 1, position.y() + h - 1);
 }
 
-virtual Vec2D AxisRect::getCenter() const{
+Vec2D AxisRect::center() const{
     return Vec2D((_points[TL].x()+_points[BR].x())/2.0f,
                  (_points[TL].y()+_points[BR].y())/2.0f);
 }
@@ -58,7 +58,7 @@ AxisRect AxisRect::inset(const AxisRect rect, Vec2D& insets){
                     rect.height() - (2.0f * insets.y()) );
 }
 
-virtual vector<Vec2D> AxisRect::getPoints() const{
+vector<Vec2D> AxisRect::points() const{
     vector<Vec2D> p;
     p.reserve(4);
     p[0] = _points[TL];
