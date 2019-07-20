@@ -28,11 +28,11 @@ class Color{
         static Color Red(){return Color(RED);}
         static Color Green(){return Color(GREEN);}
         static Color Blue(){return Color(BLUE);}
-        static Color Yellow(){return Color(0xFFFF00FF);}
-        static Color Magenta(){return Color(0xFF00FFFF);}
-        static Color Cyan(){return Color(0x00FFFFFF);}
-        static Color Pink(){return Color(0xFCC5E0FF);}
-        static Color Orange(){return Color(0xFFa200FF);}
+        static Color Yellow(){return Color(0xFFFF00);}
+        static Color Magenta(){return Color(0xFF00FF);}
+        static Color Cyan(){return Color(0x00FFFF);}
+        static Color Pink(){return Color(0xFCC5E0);}
+        static Color Orange(){return Color(0xFFa200);}
 
 
 

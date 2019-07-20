@@ -12,7 +12,9 @@
 #include "triangle.hpp"
 #include "axis_rect.hpp"
 #include "circle.hpp"
+#include <vector>
 
+using namespace std;
 
 class Screen{
     public:
@@ -42,9 +44,14 @@ class Screen{
         void draw(const Vec2D& p, const Color& c);
         void draw(const Line2D& l, const Color& c);
         void draw(const Star2D& s, const Color& c);
-        void draw(const Triangle& s, const Color& c);
-        void draw(const AxisRect& s, const Color& c);
-        void draw(const Circle& s, const Color& c);
+        void draw(const Triangle& s, const Color& c,
+                bool fill, const Color& fill_c = Color::White());
+        void draw(const AxisRect& s, const Color& c,
+                bool fill, const Color& fill_c = Color::White());
+        void draw(const Circle& s, const Color& c,
+                bool fill, const Color& fill_c = Color::White());
+
+        void fillPoly(const vector<Vec2D>& p, const Color & c);
     private:
         size_t _w, _h;
         Color _clearColor;

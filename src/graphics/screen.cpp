@@ -1,7 +1,9 @@
 #include "screen.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
-#include <math.h>
+#include <cmath>
+#include <vector>
+#include <algorithm>
 #include "triangle.hpp"
 #include "circle.hpp"
 #include "axis_rect.hpp"
@@ -112,17 +114,140 @@ void Screen::draw(const Star2D& s, const Color& c){
     }
 }
 
-void Screen::draw(const Triangle& s, const Color& c){
+void Screen::draw(const Triangle& s, const Color& c, bool fill, const Color& fill_c){
+    if(fill){
+        fillPoly(s.points(), fill_c);
+    }
     draw(Line2D(s.p0(), s.p1()), c);
     draw(Line2D(s.p1(), s.p2()), c);
     draw(Line2D(s.p2(), s.p0()), c);
 }
 
-void Screen::draw(const AxisRect& s, const Color& c){
+void Screen::draw(const AxisRect& s, const Color& c, bool fill, const Color& fill_c){
+    std::vector<Vec2D> p = s.points();
+    if(fill){
+        fillPoly(p, fill_c);
+    }
+    draw(Line2D(p[0], p[1]), c);
+    draw(Line2D(p[1], p[2]), c);
+    draw(Line2D(p[2], p[3]), c);
+    draw(Line2D(p[3], p[0]), c);
+}
+
+void Screen::draw(const Circle& s, const Color& c, bool fill, const Color& fill_c){
+    //midpoint algorithm
+    int r = int(round(s.radius()));
+    int slope_decision = 1 - r;
+    int dx = 0;
+    int dy = -2 * r;
+    int x = 0;
+    int y = r;
+    Vec2D p = s.center();
+    draw(p + Vec2D(x, y), c);
+    draw(p + Vec2D(x, -y), c);
+    if(fill){
+        draw(Line(p + Vec2D(-y, x), p + Vec2D(y, x)), fill_c);
+    }
+    draw(p + Vec2D(y, x), c);
+    draw(p + Vec2D(-y, x), c);
+    while(x < y){
+        if(slope_decision >= 0) 
+        {
+            --y;
+            dy += 2;
+            slope_decision += dy;
+        }
+        ++x;
+        dx += 2;
+        slope_decision += dx + 1;
+        if(fill){
+            draw(Line(p + Vec2D(-x, y),  p + Vec2D(x, y)), fill_c);
+
+            draw(Line(p + Vec2D(-x, -y), p + Vec2D(x, -y)), fill_c);
+
+            draw(Line(p + Vec2D(-y, x),  p + Vec2D(y, x)), fill_c);
+
+            draw(Line(p + Vec2D(-y, -x), p + Vec2D(y, -x)), fill_c);
+        }
+        
+        draw(p + Vec2D(x, y), c);
+        draw(p + Vec2D(-x, y), c);
+
+        draw(p + Vec2D(x, -y), c);
+        draw(p + Vec2D(-x, -y), c);
+
+        draw(p + Vec2D(y, x), c);
+        draw(p + Vec2D(-y, x), c);
+
+        draw(p + Vec2D(y, -x), c);
+        draw(p + Vec2D(-y, -x), c);
+
+    }
 
 }
 
-void Screen::draw(const Circle& s, const Color& c){
+void Screen::fillPoly(const vector<Vec2D>& p, const Color & c){
+    if(p.size() == 0){
+        return;
+    }
+    float top = p[0].y();
+    float bot = p[0].y();
+    float left = p[0].x();
+    float right = p[0].x();
+    //find rendering limits
+    for(unsigned int i = 0; i < p.size(); i++){
+        if(p[i].y() < top){
+            top = p[i].y();
+        }
+        if(p[i].y() > bot){
+            bot = p[i].y();
+        }
+        if(p[i].x() > right){
+            right = p[i].x();
+        }
+        if(p[i].x() < left){
+            left = p[i].x();
+        }
+    }
+    //scan through poly
+    for(unsigned int pixY = top; pixY<bot; pixY++){
+        vector<float> vX;
+        unsigned int j = p.size() - 1;
+        for(unsigned int i = 0; i < p.size(); i++){
+            float yI = p[i].y();
+            float yJ = p[j].y();
+            if( (yI <= (float)pixY && yJ > (float)pixY) ||
+                (yJ <= (float)pixY && yI > (float)pixY)){
+
+                float denom = yI - yJ;
+                if(eq_float(denom, 0.0f)){
+                    continue;
+                }
+                float x = p[i].x() + (p[j].x() - p[j].x())*(pixY - yI)/denom;
+                vX.push_back(x);
+            }
+            j = i;
+        }
+        sort(vX.begin(), vX.end());
+
+        for(unsigned int k = 0; k < vX.size(); k+=2){
+            if(vX[k] > right){
+                break;
+            }
+
+            if(vX[k+1] > left){
+                if(vX[k] < left){
+                    vX[k] = left;
+                }
+                if(vX[k+1] > right){
+                    vX[k+1] = right;
+                }
+                for(unsigned int pixX = vX[k]; pixX < vX[k+1]; pixX++){
+                    draw(pixX, pixY, c);
+                }
+            }
+        }
+    }
+
 
 }
-
