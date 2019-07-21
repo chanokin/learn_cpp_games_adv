@@ -124,7 +124,7 @@ void Screen::draw(const Triangle& s, const Color& c, bool fill, const Color& fil
 }
 
 void Screen::draw(const AxisRect& s, const Color& c, bool fill, const Color& fill_c){
-    std::vector<Vec2D> p = s.points();
+    const vector<Vec2D> p = s.points();
     if(fill){
         fillPoly(p, fill_c);
     }
@@ -143,11 +143,11 @@ void Screen::draw(const Circle& s, const Color& c, bool fill, const Color& fill_
     int x = 0;
     int y = r;
     Vec2D p = s.center();
+    if(fill){
+        draw(Line2D(p + Vec2D(-y, x), p + Vec2D(y, x)), fill_c);
+    }
     draw(p + Vec2D(x, y), c);
     draw(p + Vec2D(x, -y), c);
-    if(fill){
-        draw(Line(p + Vec2D(-y, x), p + Vec2D(y, x)), fill_c);
-    }
     draw(p + Vec2D(y, x), c);
     draw(p + Vec2D(-y, x), c);
     while(x < y){
@@ -161,13 +161,12 @@ void Screen::draw(const Circle& s, const Color& c, bool fill, const Color& fill_
         dx += 2;
         slope_decision += dx + 1;
         if(fill){
-            draw(Line(p + Vec2D(-x, y),  p + Vec2D(x, y)), fill_c);
-
-            draw(Line(p + Vec2D(-x, -y), p + Vec2D(x, -y)), fill_c);
-
-            draw(Line(p + Vec2D(-y, x),  p + Vec2D(y, x)), fill_c);
-
-            draw(Line(p + Vec2D(-y, -x), p + Vec2D(y, -x)), fill_c);
+            if(y!=r){
+                draw(Line2D(p + Vec2D(-x, y),  p + Vec2D(x, y)), fill_c);
+                draw(Line2D(p + Vec2D(-x, -y), p + Vec2D(x, -y)), fill_c);
+            }
+            draw(Line2D(p + Vec2D(-y, x),  p + Vec2D(y, x)), fill_c);
+            draw(Line2D(p + Vec2D(-y, -x), p + Vec2D(y, -x)), fill_c);
         }
         
         draw(p + Vec2D(x, y), c);
@@ -188,6 +187,7 @@ void Screen::draw(const Circle& s, const Color& c, bool fill, const Color& fill_
 
 void Screen::fillPoly(const vector<Vec2D>& p, const Color & c){
     if(p.size() == 0){
+        cout << "point vector is empty"<< endl;
         return;
     }
     float top = p[0].y();
@@ -196,19 +196,20 @@ void Screen::fillPoly(const vector<Vec2D>& p, const Color & c){
     float right = p[0].x();
     //find rendering limits
     for(unsigned int i = 0; i < p.size(); i++){
-        if(p[i].y() < top){
+        if(p[i].y() <= top){
             top = p[i].y();
         }
-        if(p[i].y() > bot){
+        if(p[i].y() >= bot){
             bot = p[i].y();
         }
-        if(p[i].x() > right){
+        if(p[i].x() >= right){
             right = p[i].x();
         }
-        if(p[i].x() < left){
+        if(p[i].x() <= left){
             left = p[i].x();
         }
     }
+    cout << "top " << top << ", bot " << bot << ", left " << left << ", right " << right << endl;
     //scan through poly
     for(unsigned int pixY = top; pixY<bot; pixY++){
         vector<float> vX;
@@ -217,18 +218,21 @@ void Screen::fillPoly(const vector<Vec2D>& p, const Color & c){
             float yI = p[i].y();
             float yJ = p[j].y();
             if( (yI <= (float)pixY && yJ > (float)pixY) ||
-                (yJ <= (float)pixY && yI > (float)pixY)){
+                (yJ <= (float)pixY && yI > (float)pixY) ){
 
                 float denom = yI - yJ;
                 if(eq_float(denom, 0.0f)){
                     continue;
                 }
-                float x = p[i].x() + (p[j].x() - p[j].x())*(pixY - yI)/denom;
+                float x = p[i].x() + (p[i].x() - p[j].x())*((float)pixY - yI)/denom;
                 vX.push_back(x);
             }
             j = i;
         }
         sort(vX.begin(), vX.end());
+
+        for(const auto& vvxx : vX)
+            cout << "y=" << pixY << ",  x=" << vvxx << endl;
 
         for(unsigned int k = 0; k < vX.size(); k+=2){
             if(vX[k] > right){

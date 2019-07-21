@@ -60,11 +60,10 @@ AxisRect AxisRect::inset(const AxisRect rect, Vec2D& insets){
 
 vector<Vec2D> AxisRect::points() const{
     vector<Vec2D> p;
-    p.reserve(4);
-    p[0] = _points[TL];
-    p[1] = Vec2D(_points[BR].x(), _points[TL].y());
-    p[2] = _points[BR];
-    p[3] = Vec2D(_points[TL].x(), _points[BR].y());
+    p.push_back(_points[TL]);
+    p.push_back(Vec2D(_points[BR].x(), _points[TL].y()));
+    p.push_back(_points[BR]);
+    p.push_back(Vec2D(_points[TL].x(), _points[BR].y()));
 
     return p;
 }

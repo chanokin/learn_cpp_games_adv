@@ -6,10 +6,10 @@ Triangle::Triangle(): Triangle(Vec2D::ZERO, Vec2D::ZERO, Vec2D::ZERO){
 }
 
 Triangle::Triangle(const Vec2D& p0, const Vec2D& p1, const Vec2D& p2){
-    _points.reserve(3);
-    _points[0] = p0;
-    _points[1] = p1;
-    _points[2] = p2;
+    // _points.reserve(3);
+    _points.push_back(p0);
+    _points.push_back(p1);
+    _points.push_back(p2);
 }
 
 Vec2D Triangle::center() const{

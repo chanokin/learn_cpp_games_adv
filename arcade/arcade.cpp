@@ -29,11 +29,12 @@ int main(int argc, const char* argv[]){
 
     Circle c = Circle(Vec2D(3*WIN_WIDTH/4, WIN_HEIGHT/2), 12.3f);
 
-    screen.draw(t, Color::Green());
-    screen.draw(r, Color::Cyan());
+    screen.draw(t, Color::Green(), true);
+    screen.draw(r, Color::Cyan(), true);
+    screen.draw(c, Color::Magenta(), true);
+
     screen.draw(WIN_WIDTH/2, WIN_HEIGHT/2, Color::Green());
     screen.draw(line0, Color::Red());
-    screen.draw(c, Color::White());
     screen.swapBuffers();
 
 
