@@ -14,7 +14,8 @@ class Star2D{
             if(_lines != nullptr){
                 return _lines[index];
             }
-            return Line2D();
+            std::cout << "Lines vector is not initialized!" << endl;
+            exit(1);
         }
     private:
         int _n_lines;

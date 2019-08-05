@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include <cinttypes>
 #include "triangle.hpp"
 #include "circle.hpp"
 #include "axis_rect.hpp"
@@ -18,19 +19,24 @@ Screen::Screen(const char* label, const size_t width, const size_t height, size_
     _ptrWin = SDL_CreateWindow(label, 
                         SDL_WINDOWPOS_CENTERED,
                         SDL_WINDOWPOS_CENTERED,
-                        width * scale, height * scale, 0);
+                        width * scale, height * scale, 
+                        0//SDL_WINDOW_VULKAN
+                        );
     if(_ptrWin == nullptr){
         cout << "Error while creating SDL window: " << SDL_GetError() << endl;
         // exit the program!!!
     }
     _ptrSurf = SDL_GetWindowSurface(_ptrWin);
-    _ptrPixFormat = _ptrSurf->format;
     
-    Color::initPixelFormat(_ptrPixFormat);
+    _ptrPixFormat = _ptrSurf->format;
+
+    _buffer = ScreenBuffer();    
+
+    _buffer.init(SDL_PIXELFORMAT_ARGB8888, _w, _h);
+    
+    Color::initPixelFormat(_buffer.getSurface()->format);
     _clearColor = Color::Black();
 
-    _buffer = ScreenBuffer();
-    _buffer.init(_ptrPixFormat->format, _w, _h);
 }
 
 Screen::~Screen(){
@@ -141,45 +147,49 @@ void Screen::draw(const Circle& s, const Color& c, bool fill, const Color& fill_
     int dx = 0;
     int dy = -2 * r;
     int x = 0;
-    int y = r;
+    int y = r, prev_y=r;
     Vec2D p = s.center();
     if(fill){
-        draw(Line2D(p + Vec2D(-y, x), p + Vec2D(y, x)), fill_c);
+        // draw(Line2D(p + Vec2D(-y+1, x), p + Vec2D(y-1, x)), fill_c);
     }
-    draw(p + Vec2D(x, y), c);
-    draw(p + Vec2D(x, -y), c);
-    draw(p + Vec2D(y, x), c);
-    draw(p + Vec2D(-y, x), c);
+    // draw(p + Vec2D(x, y), c);
+    // draw(p + Vec2D(x, -y), c);
+    // draw(p + Vec2D(y, x), c);
+    // draw(p + Vec2D(-y, x), c);
+    
     while(x < y){
+        if(fill){
+            if(y != prev_y){
+                draw(Line2D(p + Vec2D(-x+1, y),  p + Vec2D(x-1, y)), fill_c);
+                draw(Line2D(p + Vec2D(-x+1, -y), p + Vec2D(x-1, -y)), fill_c);
+            }
+            draw(Line2D(p + Vec2D(-y+1, x),  p + Vec2D(y-1, x)), fill_c);
+
+            if(x!=0){
+                draw(Line2D(p + Vec2D(-y+1, -x), p + Vec2D(y-1, -x)), fill_c);
+            }
+        }
+        
+        draw(p + Vec2D(x, y), c);
+        draw(p + Vec2D(x, -y), c);
+        draw(p + Vec2D(y, x), c);
+        draw(p + Vec2D(-y, x), c);
+
+        if(x != 0){
+            draw(p + Vec2D(-x, y), c);
+            draw(p + Vec2D(-x, -y), c);
+            draw(p + Vec2D(y, -x), c);
+            draw(p + Vec2D(-y, -x), c);
+        }
+        prev_y = y;
         if(slope_decision >= 0) 
-        {
-            --y;
+        {   --y;
             dy += 2;
             slope_decision += dy;
         }
         ++x;
         dx += 2;
         slope_decision += dx + 1;
-        if(fill){
-            if(y!=r){
-                draw(Line2D(p + Vec2D(-x, y),  p + Vec2D(x, y)), fill_c);
-                draw(Line2D(p + Vec2D(-x, -y), p + Vec2D(x, -y)), fill_c);
-            }
-            draw(Line2D(p + Vec2D(-y, x),  p + Vec2D(y, x)), fill_c);
-            draw(Line2D(p + Vec2D(-y, -x), p + Vec2D(y, -x)), fill_c);
-        }
-        
-        draw(p + Vec2D(x, y), c);
-        draw(p + Vec2D(-x, y), c);
-
-        draw(p + Vec2D(x, -y), c);
-        draw(p + Vec2D(-x, -y), c);
-
-        draw(p + Vec2D(y, x), c);
-        draw(p + Vec2D(-y, x), c);
-
-        draw(p + Vec2D(y, -x), c);
-        draw(p + Vec2D(-y, -x), c);
 
     }
 
@@ -209,9 +219,8 @@ void Screen::fillPoly(const vector<Vec2D>& p, const Color & c){
             left = p[i].x();
         }
     }
-    cout << "top " << top << ", bot " << bot << ", left " << left << ", right " << right << endl;
     //scan through poly
-    for(unsigned int pixY = top; pixY<bot; pixY++){
+    for(unsigned int pixY = top+1; pixY<bot; pixY++){
         vector<float> vX;
         unsigned int j = p.size() - 1;
         for(unsigned int i = 0; i < p.size(); i++){
@@ -231,8 +240,6 @@ void Screen::fillPoly(const vector<Vec2D>& p, const Color & c){
         }
         sort(vX.begin(), vX.end());
 
-        for(const auto& vvxx : vX)
-            cout << "y=" << pixY << ",  x=" << vvxx << endl;
 
         for(unsigned int k = 0; k < vX.size(); k+=2){
             if(vX[k] > right){
@@ -244,9 +251,9 @@ void Screen::fillPoly(const vector<Vec2D>& p, const Color & c){
                     vX[k] = left;
                 }
                 if(vX[k+1] > right){
-                    vX[k+1] = right;
+                    vX[k+1] = right-1;
                 }
-                for(unsigned int pixX = vX[k]; pixX < vX[k+1]; pixX++){
+                for(unsigned int pixX = vX[k]+1; pixX < vX[k+1]; pixX++){
                     draw(pixX, pixY, c);
                 }
             }

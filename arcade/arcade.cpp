@@ -17,7 +17,7 @@ int main(int argc, const char* argv[]){
         cout << "Error initializing SDL video" << endl;
         return 1;
     }
-    
+
     Screen screen("Arcade", WIN_WIDTH, WIN_HEIGHT, 4);
 
     Line2D line0 = Line2D(10.0f, 40.0f, 23.0f, 90.0f);
@@ -25,13 +25,21 @@ int main(int argc, const char* argv[]){
     Triangle t = Triangle(Vec2D(20.0f, 10.0f),
                     Vec2D(20.0f, 20.0f),Vec2D(50.0f, 20.0f));
 
-    AxisRect r = AxisRect(Vec2D(30.0f, 30.0f), Vec2D(39.0f, 60.0f));
+    AxisRect r = AxisRect(Vec2D(30.0f, 30.0f), Vec2D(90.0f, 90.0f));
 
     Circle c = Circle(Vec2D(3*WIN_WIDTH/4, WIN_HEIGHT/2), 12.3f);
 
-    screen.draw(t, Color::Green(), true);
-    screen.draw(r, Color::Cyan(), true);
-    screen.draw(c, Color::Magenta(), true);
+    Color magenta = Color(255, 0, 255, 125);
+
+    Color cyan = Color::Cyan();
+    cyan.setA(125);
+
+    Color red = Color::Red();
+    red.setA(125);
+
+    screen.draw(t, red, false, red);
+    screen.draw(r, cyan, true, cyan);
+    screen.draw(c, magenta, true, magenta);
 
     screen.draw(WIN_WIDTH/2, WIN_HEIGHT/2, Color::Green());
     screen.draw(line0, Color::Red());

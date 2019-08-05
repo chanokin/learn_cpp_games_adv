@@ -15,6 +15,7 @@ Triangle::Triangle(const Vec2D& p0, const Vec2D& p1, const Vec2D& p2){
 Vec2D Triangle::center() const{
     Vec2D half = (_points[0]+_points[1]) * 0.5f;
     Vec2D center = (half + _points[2]) * 0.666666f;
+    return center;
 }
 
 float Triangle::area() const{
