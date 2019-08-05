@@ -13,7 +13,8 @@ class Triangle : public Shape{
         inline Vec2D p0() const {return _points[0];}
         inline Vec2D p1() const {return _points[1];}
         inline Vec2D p2() const {return _points[2];}
-
+        
+        virtual void moveTo(const Vec2D& dest) override;
         virtual Vec2D center() const override;
         float area() const;
         bool contains(const Vec2D& p) const;

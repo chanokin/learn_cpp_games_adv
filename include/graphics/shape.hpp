@@ -10,6 +10,7 @@ class Shape{
         virtual Vec2D center() const = 0;
         inline virtual vector<Vec2D> points() const {return _points;}
         void move(const Vec2D& step);
+        virtual void moveTo(const Vec2D& dest) = 0;
     protected:
         vector<Vec2D> _points;
 };

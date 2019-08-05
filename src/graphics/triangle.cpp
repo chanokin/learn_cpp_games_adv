@@ -12,6 +12,11 @@ Triangle::Triangle(const Vec2D& p0, const Vec2D& p1, const Vec2D& p2){
     _points.push_back(p2);
 }
 
+void moveTo(const Vec2D& dest){
+    Vec2D step = dest - center();
+    move(step);
+}
+
 Vec2D Triangle::center() const{
     Vec2D half = (_points[0]+_points[1]) * 0.5f;
     Vec2D center = (half + _points[2]) * 0.666666f;
