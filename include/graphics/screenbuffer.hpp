@@ -11,6 +11,7 @@ class ScreenBuffer{
         ScreenBuffer():_w(0), _h(0), _format(0), _surface(nullptr){}
         ScreenBuffer(const ScreenBuffer* b);
         ~ScreenBuffer();
+        ScreenBuffer(ScreenBuffer&& b);
 
         ScreenBuffer& operator=(const ScreenBuffer& rhs);
 

@@ -12,7 +12,7 @@ Triangle::Triangle(const Vec2D& p0, const Vec2D& p1, const Vec2D& p2){
     _points.push_back(p2);
 }
 
-void moveTo(const Vec2D& dest){
+void Triangle::moveTo(const Vec2D& dest){
     Vec2D step = dest - center();
     move(step);
 }

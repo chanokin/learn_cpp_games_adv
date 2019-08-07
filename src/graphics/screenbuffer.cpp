@@ -14,6 +14,8 @@ ScreenBuffer::~ScreenBuffer(){
     }
 }
 
+ScreenBuffer::ScreenBuffer(ScreenBuffer&& b): _w(b._w), _h(b._h), _format(b._format), _surface(b._surface){}
+
 ScreenBuffer& ScreenBuffer::operator=(const ScreenBuffer& rhs){
     if(this == &rhs){
         return (*this);

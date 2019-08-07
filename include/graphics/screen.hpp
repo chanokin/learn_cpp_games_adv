@@ -21,7 +21,7 @@ class Screen{
         Screen():_w(0), _h(0), _ptrWin(nullptr), _ptrSurf(nullptr), 
                 _ptrPixFormat(nullptr), _buffer(){}
         Screen(const char* label, size_t width, size_t height, size_t scale);
-        //init(const char* label, size_t width, size_t height);
+        void init(const char* label, size_t width, size_t height, size_t scale);
         ~Screen();
         void clean_up();
         inline size_t width() const{return _w;}
@@ -29,6 +29,7 @@ class Screen{
         inline bool inbound(const float& x, const float& y) const{
             return (x>= 0 && x < _w && y >= 0 && y < _h);
         }
+        inline SDL_Window* window() const{return _ptrWin;}
         inline SDL_PixelFormat* pixelformat() const{return _ptrPixFormat;}
         inline void update(){
             SDL_BlitScaled(_buffer.getSurface(), nullptr, _ptrSurf, nullptr);

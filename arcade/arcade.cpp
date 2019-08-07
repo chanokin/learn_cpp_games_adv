@@ -1,11 +1,6 @@
 #include "arcade.hpp"
-#include "graphics/color.hpp"
-#include "graphics/screenbuffer.hpp"
-#include "graphics/screen.hpp"
-#include "graphics/line2d.hpp"
-#include "graphics/triangle.hpp"
-#include "graphics/axis_rect.hpp"
-#include "graphics/circle.hpp"
+#include "app/app.hpp"
+
 
 using namespace std;
 
@@ -13,53 +8,7 @@ using namespace std;
 // extern size_t WIN_HEIGHT;
 
 int main(int argc, const char* argv[]){
-    if(SDL_Init(SDL_INIT_VIDEO)){
-        cout << "Error initializing SDL video" << endl;
-        return 1;
-    }
-
-    Screen screen("Arcade", WIN_WIDTH, WIN_HEIGHT, 4);
-
-    Line2D line0 = Line2D(10.0f, 40.0f, 23.0f, 90.0f);
-
-    Triangle t = Triangle(Vec2D(20.0f, 10.0f),
-                    Vec2D(20.0f, 20.0f),Vec2D(50.0f, 20.0f));
-
-    AxisRect r = AxisRect(Vec2D(30.0f, 30.0f), Vec2D(90.0f, 90.0f));
-
-    Circle c = Circle(Vec2D(3*WIN_WIDTH/4, WIN_HEIGHT/2), 12.3f);
-
-    Color magenta = Color(255, 0, 255, 125);
-
-    Color cyan = Color::Cyan();
-    cyan.setA(125);
-
-    Color red = Color::Red();
-    red.setA(125);
-
-    screen.draw(t, red, false, red);
-    screen.draw(r, cyan, true, cyan);
-    screen.draw(c, magenta, true, magenta);
-
-    screen.draw(WIN_WIDTH/2, WIN_HEIGHT/2, Color::Green());
-    screen.draw(line0, Color::Red());
-    screen.swapBuffers();
-
-
-    SDL_Event sdlEvent;
-    bool running = true;
-    while(running){
-        
-        while(SDL_PollEvent(&sdlEvent)){
-            switch (sdlEvent.type){
-                case SDL_QUIT:
-                    running = false;
-                    break;
-            }
-        }
-
-    }
-    screen.clean_up();
-    SDL_Quit();
+    App::singleton().init("Arcade", WIN_WIDTH, WIN_HEIGHT, 3);
+    App::singleton().run();
     return 0;
 }
