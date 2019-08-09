@@ -1,7 +1,6 @@
 #include "app/app.hpp"
 #include "graphics/screen.hpp"
 #include "scene/arcade_scene.hpp"
-#include <memory>
 
 using namespace std;
 
@@ -12,16 +11,20 @@ App& App::singleton(){
 bool App::init(const char* label, uint32_t width, uint32_t height, uint32_t mag){
     _screen.init(label, width, height, mag);
     _ptrWin = _screen.window();
-    return _ptrWin != nullptr;
+
+    if(_ptrWin == nullptr){
+        return false;
+    }
+
+    unique_ptr<ArcadeScene> arcadeScene = make_unique<ArcadeScene>();
+    pushScene(move(arcadeScene));
+
+    return true;
 }
 
 void App::run(){
 
     if(_ptrWin != nullptr){
-
-        unique_ptr<ArcadeScene> arcadeScene = make_unique<ArcadeScene>();
-        arcadeScene->init();
-
 
         uint32_t lastTick = SDL_GetTicks();
         uint32_t currentTick = lastTick;
@@ -48,14 +51,16 @@ void App::run(){
                 }
             }
             lastTick = currentTick;
-            
-            while(accumTime > accumDT){
-                arcadeScene->update(accumDT);
-                accumTime -= accumDT; // this probably changes from pc to pc!
+            Scene* currentScene = topScene();
+            if(currentScene != nullptr){
+                while(accumTime > accumDT){
+                    currentScene->update(accumDT);
+                    accumTime -= accumDT; // this probably changes from pc to pc!
+                }
+
+                currentScene->draw(_screen);
             }
-
-
-            arcadeScene->draw(_screen);
+            
             _screen.swapBuffers();
 
 
@@ -63,4 +68,29 @@ void App::run(){
         _screen.clean_up();
         SDL_Quit();
     }
+}
+
+
+void App::pushScene(unique_ptr<Scene> scene){
+    if(scene != nullptr){
+        scene->init();
+        SDL_SetWindowTitle(_ptrWin, scene->name().c_str());
+        _sceneStack.emplace_back(move(scene));
+    }
+}
+
+void App::popScene(){
+    if(_sceneStack.size()>1){
+        _sceneStack.pop_back();
+    }
+    if(topScene() != nullptr){
+        SDL_SetWindowTitle(_ptrWin, topScene()->name().c_str());
+    }
+}
+
+Scene* App::topScene(){
+    if(_sceneStack.empty()){
+        return nullptr;
+    }
+    return _sceneStack.back().get();
 }

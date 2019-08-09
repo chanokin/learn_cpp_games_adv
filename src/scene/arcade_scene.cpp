@@ -6,10 +6,13 @@
 #include "graphics/triangle.hpp"
 #include "graphics/axis_rect.hpp"
 #include "graphics/circle.hpp"
+#include <string>
 
-ArcadeScene::ArcadeScene(){}
+ArcadeScene::ArcadeScene(){
+}
 // virtual ~Scene(){}
-void ArcadeScene::init(){}
+void ArcadeScene::init(){
+}
 void ArcadeScene::update(uint32_t dt){}
 void ArcadeScene::draw(Screen& screen){
 
@@ -38,7 +41,11 @@ void ArcadeScene::draw(Screen& screen){
     screen.draw(line0, Color::Red());
 
 }
-const std::string ArcadeScene::name(){return "Main menu";}
+const std::string& ArcadeScene::name() const{
+    static std::string str("Main Menu");
+    return str;
+}
+
 std::unique_ptr<Scene> ArcadeScene::getScene(GameID gid){
     switch (gid)
     {
