@@ -2,6 +2,8 @@
 #define APP_HPP
 #include "graphics/screen.hpp"
 #include "scene/scene.hpp"
+#include "input/input_controller.hpp"
+
 #include <stdint.h>
 #include <memory>
 #include <vector>
@@ -25,7 +27,7 @@ class App{
         Screen _screen;
         SDL_Window* _ptrWin;
         vector<unique_ptr<Scene>> _sceneStack;
-
+        InputController _inputController;
 };
 
 #endif

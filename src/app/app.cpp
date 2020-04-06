@@ -33,8 +33,14 @@ void App::run(){
         uint32_t maxFrameTime = 300;
         uint32_t accumDT = 10;
 
-        SDL_Event sdlEvent;
         bool running = true;
+
+        // lambda [running](dt, state){}
+        // [ captures ] ( params ) { body }
+        _inputController.init([&running](uint32_t dt, InputState state){
+            running = false;
+        });
+
         while(running){
             currentTick = SDL_GetTicks();
             frameTime = currentTick - lastTick;
@@ -42,14 +48,9 @@ void App::run(){
                 frameTime = maxFrameTime;
             }
             accumTime += frameTime;
+            
+            _inputController.update(accumDT);
 
-            while(SDL_PollEvent(&sdlEvent)){
-                switch (sdlEvent.type){
-                    case SDL_QUIT:
-                        running = false;
-                        break;
-                }
-            }
             lastTick = currentTick;
             Scene* currentScene = topScene();
             if(currentScene != nullptr){
@@ -74,6 +75,7 @@ void App::run(){
 void App::pushScene(unique_ptr<Scene> scene){
     if(scene != nullptr){
         scene->init();
+        _inputController.setGameControl(scene->getControls()); 
         SDL_SetWindowTitle(_ptrWin, scene->name().c_str());
         _sceneStack.emplace_back(move(scene));
     }
@@ -82,9 +84,12 @@ void App::pushScene(unique_ptr<Scene> scene){
 void App::popScene(){
     if(_sceneStack.size()>1){
         _sceneStack.pop_back();
+        
     }
     if(topScene() != nullptr){
+        _inputController.setGameControl(topScene()->getControls()); 
         SDL_SetWindowTitle(_ptrWin, topScene()->name().c_str());
+        
     }
 }
 

@@ -6,12 +6,39 @@
 #include "graphics/triangle.hpp"
 #include "graphics/axis_rect.hpp"
 #include "graphics/circle.hpp"
+#include "input/game_control.hpp"
+
 #include <string>
+#include <iostream>
 
 ArcadeScene::ArcadeScene(){
 }
 // virtual ~Scene(){}
-void ArcadeScene::init(){
+void ArcadeScene::init(){ 
+    ButtonAction action;
+    action.key = GameControl::keyAction();
+    action.action = [](uint32_t dt, InputState state){
+        if (GameControl::isPressed(state)){
+            std::cout << "Action button pressed for Arcade Scene" << std::endl;
+        }
+    };
+    _gameControl.addButtonAction(action);
+
+    MouseButtonAction mouseAction;
+    mouseAction.button = GameControl::leftMouseButton();
+    mouseAction.action = [](InputState state, const MousePosition& position){
+        if (GameControl::isPressed(state))
+        {
+            std::cout << "Left mouse button pressed at (" << position.x << 
+                      ", " << position.y << ")" << std::endl;
+        }
+    };
+    _gameControl.addMouseButtonAction(mouseAction);
+
+    _gameControl.setMouseMovedAction([](const MousePosition& position){
+        std::cout << "Mouse moved at (" << position.x << 
+                      ", " << position.y << ")" << std::endl;
+    });
 }
 void ArcadeScene::update(uint32_t dt){}
 void ArcadeScene::draw(Screen& screen){
