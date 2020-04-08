@@ -20,7 +20,7 @@ class AxisRect : public Shape{
         float height()const;
         void moveTo(const Vec2D& position);
         virtual Vec2D center() const override;
-        bool intersects(const AxisRect& rhs);
+        bool intersects(const AxisRect& rhs) const;
         bool contains(const Vec2D& p);
         static AxisRect inset(const AxisRect rect, Vec2D& insets);
         virtual vector<Vec2D> points() const override;

@@ -13,7 +13,7 @@ class Scene{
         virtual void init() = 0;
         virtual void update(uint32_t dt) = 0;
         virtual void draw(Screen& s) = 0;
-        virtual const std::string& name() const = 0; 
+        virtual const std::string name() const = 0; 
         GameControl* getControls(){return &_gameControl;}
 
     protected:

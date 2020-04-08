@@ -68,7 +68,7 @@ void ArcadeScene::draw(Screen& screen){
     screen.draw(line0, Color::Red());
 
 }
-const std::string& ArcadeScene::name() const{
+const std::string ArcadeScene::name() const{
     static std::string str("Main Menu");
     return str;
 }

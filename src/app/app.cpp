@@ -1,7 +1,8 @@
 #include "app/app.hpp"
 #include "graphics/screen.hpp"
 #include "scene/arcade_scene.hpp"
-
+#include "scene/game_scene.hpp"
+#include "games/breakout/breakout.hpp"
 using namespace std;
 
 App& App::singleton(){
@@ -15,10 +16,12 @@ bool App::init(const char* label, uint32_t width, uint32_t height, uint32_t mag)
     if(_ptrWin == nullptr){
         return false;
     }
-
     unique_ptr<ArcadeScene> arcadeScene = make_unique<ArcadeScene>();
     pushScene(move(arcadeScene));
 
+    unique_ptr<Breakout> breakout = make_unique<Breakout>();
+    unique_ptr<GameScene> breakoutScene = make_unique<GameScene>(move(breakout));
+    pushScene(move(breakoutScene));
     return true;
 }
 

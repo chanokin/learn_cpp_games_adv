@@ -38,11 +38,11 @@ Vec2D AxisRect::center() const{
                  (_points[TL].y()+_points[BR].y())/2.0f);
 }
 
-bool AxisRect::intersects(const AxisRect& rhs){
-    bool left = rhs.bottomRight().x() < topLeft().x();
-    bool right = rhs.topLeft().x() > bottomRight().x();
-    bool up = rhs.bottomRight().y() < topLeft().y();
-    bool down = rhs.topLeft().y() > bottomRight().y(); 
+bool AxisRect::intersects(const AxisRect& rhs) const{
+    bool left = rhs.bottomRight().x() < this->topLeft().x();
+    bool right = rhs.topLeft().x() > this->bottomRight().x();
+    bool up = rhs.bottomRight().y() < this->topLeft().y();
+    bool down = rhs.topLeft().y() > this->bottomRight().y(); 
     return !(left || right || up || down);
 }
 

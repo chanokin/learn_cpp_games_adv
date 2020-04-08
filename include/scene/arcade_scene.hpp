@@ -20,7 +20,7 @@ class ArcadeScene : public Scene{
         virtual void init() override;
         virtual void update(uint32_t dt) override;
         virtual void draw(Screen& s) override;
-        virtual const std::string& name() const override; 
+        virtual const std::string name() const override; 
     private:
         std::unique_ptr<Scene> getScene(GameID gid);
 };
