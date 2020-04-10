@@ -1,7 +1,8 @@
 #include "bouncer.hpp"
 #include <cmath>
 #include <cassert>
-
+#include "math_utils.hpp"
+#include <iostream>
 void Bouncer::init(const AxisRect& rect, bool invertNormals){
     _rect = rect;
     _invertedNormals = invertNormals;
@@ -16,6 +17,12 @@ bool Bouncer::collided(const AxisRect& rect) const{
 }
 
 const Border& Bouncer::computeBorder(const AxisRect& rect) const{
+    float dx, dy;
+    return computeBorder(rect, dx, dy);
+}
+
+const Border& Bouncer::computeBorder(
+                    const AxisRect& rect, float& _dx, float& _dy) const{
     // identify on which border did rect collide with _rect (this)
     float minY = 0.0f, maxY = 0.0f;
     float minX = 0.0f, maxX = 0.0f;
@@ -31,12 +38,14 @@ const Border& Bouncer::computeBorder(const AxisRect& rect) const{
     maxX = (rect.bottomRight().x() >= _rect.bottomRight().x()) ? 
             rect.bottomRight().x() : _rect.bottomRight().x();
     
-    float dy = maxY - minY;
-    float dx = maxX - minX;
+    _dy = maxY - minY;
+    _dx = maxX - minX;
 
-    if(dx > dy){
+    // if dx is bigger than dy, it is likelier to have hit on the top
+    // or bottom (a larger region to collide)
+    if(_dx > _dy){
         // y coords go from 0 (top) to height (bottom)
-        if(rect.center().y() < _rect.center().y()){
+        if(rect.center().y() > _rect.center().y()){
             return _borders[BOTTOM];
         } else {
             return _borders[TOP];
@@ -55,7 +64,15 @@ const Border& Bouncer::computeBorder(const AxisRect& rect) const{
 
 Vec2D Bouncer::collisionOffset(const AxisRect& rect) const{
     if(collided(rect)){
-        Border border = computeBorder(rect);
+        float dx, dy;
+        Border border = computeBorder(rect, dx, dy);
+        // if the normal to the border has a Y=0 component, then the collision 
+        // ocurred horizontally (i.e. on the left or right border)
+        if( eq_float(border.normal.y(), 0.0f) ){
+            return (dx + 1) *  border.normal;
+        } else {
+            return (dy + 1) *  border.normal;
+        }
     }
     return Vec2D::ZERO;
 }

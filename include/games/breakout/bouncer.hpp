@@ -12,6 +12,9 @@ class Bouncer{
 
         bool collided(const AxisRect& rect) const;
         const Border& computeBorder(const AxisRect& rect) const;
+        // enable return of collision measurements
+        const Border& computeBorder(const AxisRect& rect, float& dx, float &dy) const;
+
         Vec2D collisionOffset(const AxisRect& rect) const;
 
         void move(const Vec2D& dist);

@@ -5,8 +5,7 @@ Circle::Circle(): Circle(Vec2D::ZERO, 0.0f){
 }
 
 Circle::Circle(const Vec2D& center, const float& radius){
-    _points.reserve(1);
-    _points[0] = center;
+    _points.push_back(center);
     _radius = radius;
 }
 

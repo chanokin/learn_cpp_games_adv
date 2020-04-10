@@ -9,6 +9,8 @@ using namespace std;
 class AxisRect : public Shape{
     public:
         AxisRect();
+        AxisRect(const float& topX, const float& topY, 
+                 const float& width, const float& height);
         AxisRect(const Vec2D& topLeft, const float& width, const float& height);
         AxisRect(const Vec2D& topLeft, const Vec2D& bottomRight);
 

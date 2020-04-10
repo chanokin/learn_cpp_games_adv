@@ -13,7 +13,7 @@ class Game{
         virtual void update(uint32_t dt) = 0;
         virtual void draw(Screen& screen) = 0;
         virtual std::string getName() const = 0;
-
+        virtual void reset() = 0;
 };
 
 #endif

@@ -5,16 +5,21 @@
 AxisRect::AxisRect(): AxisRect(Vec2D::ZERO, Vec2D::ZERO){
 }
 
+AxisRect::AxisRect(const float& topX, const float& topY, 
+                    const float& width, const float& height){
+    _points.push_back(Vec2D(topX, topY));
+    _points.push_back(Vec2D(topX + width - 1, topY + height - 1));
+}
+
+
 AxisRect::AxisRect(const Vec2D& topLeft, const float& width, const float& height){
-    _points.reserve(2);
-    _points[TL] = topLeft;
-    _points[BR] = Vec2D(topLeft.x() + width - 1, topLeft.y() + height - 1);
+    _points.push_back(topLeft);
+    _points.push_back(Vec2D(topLeft.x() + width - 1, topLeft.y() + height - 1));
 }
 
 AxisRect::AxisRect(const Vec2D& topLeft, const Vec2D& bottomRight){
-    _points.reserve(2);
-    _points[TL] = topLeft;
-    _points[BR] = bottomRight;
+    _points.push_back(topLeft);
+    _points.push_back(bottomRight);
 }
 
 float AxisRect::width()const{
@@ -60,10 +65,10 @@ AxisRect AxisRect::inset(const AxisRect rect, Vec2D& insets){
 
 vector<Vec2D> AxisRect::points() const{
     vector<Vec2D> p;
-    p.push_back(_points[TL]);
-    p.push_back(Vec2D(_points[BR].x(), _points[TL].y()));
-    p.push_back(_points[BR]);
-    p.push_back(Vec2D(_points[TL].x(), _points[BR].y()));
+    p.push_back(_points[TL]); // top left
+    p.push_back(Vec2D(_points[BR].x(), _points[TL].y())); // top right
+    p.push_back(_points[BR]); // bottom right
+    p.push_back(Vec2D(_points[TL].x(), _points[BR].y())); // bottom left
 
     return p;
 }
